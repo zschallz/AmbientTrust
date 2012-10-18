@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="nettrust.css" type="text/css"?>
+
+<window title="Comments Tree" id="tree-window" 
+	windowtype="nettrust:comments"
+   resizable="yes" 
+   width="450"
+   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   onload="url = window.opener.document.getElementById('urlbar').value; 
+	   win = window.opener;
+	   setView();">
+
+<!-- <script type="application/x-javascript" src="util.js" />  -->
+<script type="application/x-javascript" src="comments.js" /> 
+
+<tree id="comments-tree" flex="1" minwidth="300">
+  <treecols>
+    <treecol id="namecol" label="Name" flex="1"/>
+    <treecol id="ratecol" label="Rating" />
+    <treecol id="comcol" label="Comment" flex="1"/>
+  </treecols>
+  <treechildren/>
+</tree>
+
+  <vbox>
+    <label value="Comment:" control="ctext"/>
+    <textbox id="ctext" multiline="false" value="" cols="80"/>
+<!--     <button id="updateComment" label="Apply" oncommand="apply_comment();"/> -->
+  </vbox>
+
+
+<vbox>
+<label value="Manual Rating Selection:"/>
+<radiogroup id="rScale">
+<hbox>
+  <radio id="neg5" label="-5"/>
+  <radio id="neg4" label="-4"/>
+  <radio id="neg3" label="-3"/>
+  <radio id="neg2" label="-2"/>
+  <radio id="neg1" label="-1"/>
+  <radio id="pos1" label="1"/>
+  <radio id="pos2" label="2"/>
+  <radio id="pos3" label="3"/>
+  <radio id="pos4" label="4"/>
+  <radio id="pos5" label="5"/>
+</hbox>
+</radiogroup>
+<button id="apply" label="Apply" oncommand="apply_update();"/>
+</vbox>
+</window>
+

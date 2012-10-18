@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<window
+    id="dbviewer"
+    title="Local DB Parse and Write"
+    orient="vertical"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+   onload="var d = document.getElementById('display');
+	   persona_change(document.getElementById('myID').value, document.getElementById('budIDs').value.split(','));
+	   d.value = '[SN loaded]';">
+  <script src="fileio.js"/>
+  <script src="ntdb.js"/>
+  <label value="File read and DB lookup using the DOM API" />
+  <hbox>
+    <label value="Location ID:" control="loc"/>
+    <textbox id="loc" value="http://www.nytimes.com/opinion/"/>
+  </hbox>
+  <hbox>
+    <label value="Comment:" control="ctext"/>
+    <textbox id="ctext" value="Kick Ax!!!"/>
+  </hbox>
+  <hbox>
+    <label value="My ID:" control="myID"/>
+    <textbox id="myID" value="0"/>
+  </hbox>
+  <hbox>
+    <label value="Buddy IDs:" control="budIDs"/>
+    <textbox id="budIDs" value="1,2,3"/>
+  </hbox>
+  <textbox id="display" multiline="true"  rows="10" cols="40"/>
+  <hbox flex="1" pack="center" align="center">
+
+    <button id="updateVisit" 
+	    label="Update w/ Visit" 
+	    oncommand="var d = document.getElementById('display');
+		       var dom = insert_visit(document.getElementById('loc').value);
+		       d.value = (new XMLSerializer()).serializeToString(dom);"
+	    />
+
+    <button id="comment" 
+	    label="Update w/ Comment" 
+	    oncommand="var d = document.getElementById('display');
+		       var dom = insert_comment(document.getElementById('loc').value, document.getElementById('ctext').value);
+		       d.value = (new XMLSerializer()).serializeToString(dom);"
+	    />
+
+    <button id="xprate" 
+	    label="Update w/ XPRating" 
+	    oncommand="var d = document.getElementById('display');
+		       var dom = insert_rating(document.getElementById('loc').value, document.getElementById('ctext').value);
+		       d.value = (new XMLSerializer()).serializeToString(dom);"/>
+
+    
+<!--     <button id="record"  -->
+<!-- 	    label="Show Record"  -->
+<!-- 	    oncommand="var d = document.getElementById('display'); -->
+<!-- 		       var loc = myDB.DBs[0].lookupLoc(document.getElementById('loc').value); -->
+<!-- 		       d.value = (new XMLSerializer()).serializeToString(loc);"/> -->
+
+    <button id="rate" 
+	    label="Show SN Rating" 
+	    oncommand="var d = document.getElementById('display');
+		       d.value = get_rating(document.getElementById('loc').value);"/>
+
+<!--     <button id="showCom"  -->
+<!-- 	    label="Show Comment"  -->
+<!-- 	    oncommand="var d = document.getElementById('display'); -->
+<!-- 		       d.value = myDB.DBs[0].lookupComment(document.getElementById('loc').value);"/> -->
+
+    <button id="changeSN" 
+	    label="Change SN" 
+	    oncommand="var d = document.getElementById('display');
+		       persona_change(document.getElementById('myID').value, document.getElementById('budIDs').value.split(','));
+		       d.value = '[Old SN written. New SN loaded]';"/>
+
+<!--     <button id="writeMyDB" -->
+<!-- 	    label="Write MyDB" -->
+<!-- 	    oncommand="myDB.saveMyRateDB(); -->
+<!-- 		       var d = document.getElementById('display'); -->
+<!-- 		       d.value = 'Wrote DB';"/> -->
+
+  </hbox>
+</window>

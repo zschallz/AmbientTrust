@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog id="login_window" title="Net Trust Persona Manager" 
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	resizable="yes"
+	onload="init();"
+	buttons = "accept,cancel"
+	ondialogaccept = "doAccept();"
+	ondialogcancel = "doCancel();"
+	onunload = "fin();">
+
+<script type="application/x-javascript" src="md5.js" />
+<script type="application/x-javascript" src="sha1.js"/>
+<script type="application/x-javascript" src="fileio.js" />
+<script type="application/x-javascript" src="util.js" />
+<script type="application/x-javascript" src="personas.js" />
+<script type="application/x-javascript" src="invite.js" />
+
+<tabbox flex="1">
+  <tabs>
+    <tab label="Social Networks"/>
+    <tab label="Personas"/>
+    <tab label="Contact List"/>
+    <tab label="Advanced/Test Area" />    
+  </tabs>
+  <tabpanels flex="1">
+    <tabpanel id="browsetab" flex="1">
+<vbox>
+
+<groupbox flex="1">
+  <caption label="Manage Social Networks"/>
+<vbox flex="1">
+<hbox >
+<menulist id="persona_menu" 
+            datasources=""
+            ref="http://www.nettrust-site.net/social_net"
+            oncommand="populating_lists();">
+    <menupopup>
+       <menuitem label="None"/>
+    </menupopup>
+    <template>
+      <rule>
+        <conditions>
+          <content uri="?start"/>
+          <member container="?start" child="?persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#type"
+                object="persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#nym"
+                object="?nym"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#id"
+                object="?id"/>
+        </conditions>
+        <action>
+          <menupopup>
+            <menuitem uri="?persona" label="?nym" value="?id"/>
+          </menupopup>
+        </action>
+      </rule>
+    </template>
+  </menulist>
+  </hbox>
+<hbox flex="1">
+<vbox flex="1">
+
+<label id="friend_label" value="Friends" />
+ <listbox id="Persona_flist" seltype="single" onselect="show_details2();"  flex="1">
+</listbox>
+
+</vbox>		
+		<vbox>
+		<label value="" />
+		<label value="" />
+		<label value="" />
+		<label value="" />
+
+		<button
+    	id="add_relationship"
+    	label="add"
+		oncommand = "add_relationship();" />
+		<button
+    	id="remove_relationship"
+    	label="remove"
+		oncommand = "remove_relationship();"/>
+		</vbox>
+<vbox>
+<label value="Contact List" />
+		
+<listbox id="friend_list" seltype="single" onselect="show_details1();" flex="1" >
+</listbox>
+</vbox>
+</hbox>
+</vbox>
+</groupbox>
+
+<groupbox >
+  <caption label="Friend Details"/>
+
+<hbox>
+<vbox>
+
+<label value="Nym:" />
+<label value="" />
+<label value="Net ID:" />
+<label value="" />
+<label value="Email:" />
+<label value="" />
+<label value="Type" />
+
+</vbox>
+<vbox>
+<label id ="nym1" value="" />
+<label value="" />
+<label id ="netid1" value="" />
+<label  value="" />
+<label  id="email1" value="" />
+<label value="" />
+<label  id="type1" value="" />
+
+</vbox>
+</hbox>
+
+
+</groupbox>
+</vbox>
+
+  </tabpanel>
+  
+ 
+  <tabpanel id="manage_persona">
+    <vbox>
+      
+      <groupbox id="persona_tab"  onload = "load_persona_menu();" flex="1">
+	<caption label="Manage Persona"/>
+	<hbox flex="1">
+	  <hbox flex="1">
+	    <listbox id="persona_list"  onselect="show_persona_details();guardExportButton();" flex="1" >
+	    </listbox>
+	  </hbox>
+	  <vbox>
+	    <label value="" />
+	    <label value="" />
+	    <label value="" />
+	    <label value="" />
+	    <label value=""/>
+	    
+	    
+
+	    <button
+		id="add_relationship"
+		label="Create Persona"
+		oncommand = "add_persona();" />
+	    <button
+		id="remove_relationship"
+		label="Remove Persona"
+		oncommand = "erase_persona_forced();"/>
+	    <button
+		id="export-persona"
+		label="Export Persona"
+		oncommand = "exportPersona()" />
+
+	  </vbox>
+	  <vbox>
+	    <groupbox >
+	      <caption label="Add Persona"/>
+	      <label value="Nym"/>
+	      <textbox id="new-persona-nym"/>
+	      <label  value="Email Address"/>
+	      <textbox id="new-persona-email" maxlength="50"/>
+
+	    </groupbox>
+	    <label value=""/>
+	    <groupbox >
+	      <caption label="Export Persona"/>
+	      <label  value="Recipient Email Address"/>
+	      <textbox id="target-email" maxlength="50" oninput="guardExportButton();" control="export-persona"/>
+
+	    </groupbox>
+	  </vbox>
+	</hbox>
+	
+      </groupbox>
+      
+      <groupbox id="persona_details"   >
+	<caption label="Persona Details"/>
+
+	<hbox>
+	  <vbox>
+
+	    <label value="Nym:" />
+	    <label value="" />
+	    <label value="Net ID:" />
+	    <label value="" />
+	    <label value="Email:" />
+	    <label value="" />
+	    <label value="Type" />
+	    <label value="" />
+	    <label value="Friends:"/>
+	  </vbox>
+	  <vbox>
+	    <label id ="persona_nym" value="" />
+	    <label value="" />
+	    <label id ="persona_netid" value="" />
+	    <label  value="" />
+	    <label  id="persona_email" value="" />
+	    <label value="" />
+	    <label  id="persona_type" value="" />
+	    <label value="" />
+	    <label id="per_fri" value=""/>
+	  </vbox>
+	</hbox>
+
+
+      </groupbox>
+      
+    </vbox>
+  </tabpanel>
+			  
+			  
+			  
+			  
+	  <tabpanel id="manage_friends">
+			   
+			    <vbox>
+			  
+			  <groupbox  id= "fri_list" flex="1" >
+			  <caption label="Manage Contacts"/>
+			  <hbox flex="1">
+			  <hbox flex="1">
+			  <listbox id="friends_list" onselect="show_friends_details();" flex="1">
+				</listbox>
+			  </hbox>
+			  <vbox>
+		<label value="" />
+		<label value="" />
+		<label value="" />
+		<label value="" />
+		<label value=""/>
+		
+		
+
+		<button
+    	label="Add Contact"
+		oncommand = "add_friend();" />
+		<button
+    	label="Import Contact..."
+		oncommand = "NTImportContact();" />
+		<button
+    	label="Remove Contact"
+		oncommand = "delete_friend();"/>
+		</vbox>
+			<vbox>
+		  <groupbox id ="frie"  flex="1" >
+          <caption label="Add Contact"/>
+          <label control="new-friend-nym" value="Nym"/>
+		  <hbox>
+          <textbox id="new-friend-nym"/>
+          </hbox>
+		  <label control="new-friend-email" value="Email Address"/>
+          <hbox>
+		  <textbox id="new-friend-email" maxlength="50"/>
+          </hbox>
+		  <label control="new-friend-id" value="Nettrust ID" />
+          <hbox>
+		  <textbox id="new-friend-id" maxlength="50"/>
+          </hbox>
+		  <label control="new-friend-blinder" value="blinder" />
+		  <hbox>
+          <textbox id="new-friend-blinder" maxlength="50"/>
+		  </hbox>
+		            
+</groupbox>
+		  <label value=""/>
+			</vbox>
+		</hbox>
+		
+		</groupbox>
+		
+		<groupbox id="persona_details"   >
+  		<caption label="Contact Details"/>
+
+		<hbox>
+		<vbox>
+		  <label value="Nym:" />
+		  <label value="" />
+		  <label value="Net ID:" />
+		  <label value="" />
+		  <label value="Email:" />
+		  <label value="" />
+		  <label value="Type" />
+		  <label value="" />
+		  <label value="Personas:"/>
+		</vbox>
+		<vbox>
+	 	  <label id ="friend_nym" value="" />
+		  <label value="" />
+		  <label id ="friend_netid" value="" />
+		  <label  value="" />
+		  <label  id="friend_email" value="" />
+		  <label value="" />
+		  <label  id="friend_type" value="" />
+		  <label value="" />
+		  <label id="fri_per" value=""/>
+		</vbox>
+		</hbox>
+
+
+		</groupbox>
+		
+		</vbox>
+      </tabpanel>
+      <tabpanel id="test_area">
+        <vbox>
+         <button
+        label="Request via proxy"
+                oncommand = "test_proxy_get();" />
+
+         <button
+        label="Back up Social net"
+                oncommand = "test_export_social_net();" />
+         <button
+        label="Restore Social net"
+                oncommand = "test_restore_social_net();" />
+
+        </vbox>
+      </tabpanel>
+
+
+
+  </tabpanels>
+</tabbox>
+ 
+ 
+</dialog>

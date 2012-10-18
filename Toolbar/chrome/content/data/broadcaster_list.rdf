@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:RATINGS="http://www.nettrust-site.net/rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Seq RDF:about="http://www.nettrust-site.net/broadcaster">
+    <RDF:li RDF:resource="http://www.nettrust-site.net/google"/>
+    <RDF:li RDF:resource="http://www.nettrust-site.net/camilo"/>
+    <RDF:li RDF:resource="http://www.nettrust-site.net/siteadvisor"/>
+    <RDF:li RDF:resource="http://www.nettrust-site.net/fdic"/>
+  </RDF:Seq>
+  <RDF:Description RDF:about="http://www.nettrust-site.net/google"
+                   RATINGS:name="Google"
+                   RATINGS:nym="Google"
+                   RATINGS:url="www.google.com"
+                   RATINGS:rating="positive"
+                   RATINGS:type="broadcaster"
+                   RATINGS:enabled="false" />
+  <RDF:Description RDF:about="http://www.nettrust-site.net/fdic"
+                   RATINGS:name="Bank?"
+                   RATINGS:nym="Fdic"
+                   RATINGS:url="www.fdic.gov"
+                   RATINGS:rating="positive"
+                   RATINGS:type="broadcaster"
+                   RATINGS:default="negative"
+                   RATINGS:enabled="true" />
+  <RDF:Description RDF:about="http://www.nettrust-site.net/camilo"
+                   RATINGS:name="Camilo's ratings"
+                   RATINGS:nym="Camilo's"
+                   RATINGS:url="www.cs.indiana.edu/~cviecco"
+                   RATINGS:rating="positive"
+                   RATINGS:type="broadcaster"
+                   RATINGS:enabled="true" />
+
+  <RDF:Description RDF:about="http://www.nettrust-site.net/siteadvisor"
+                  RATINGS:name="Site Advisor"
+                  RATINGS:nym="Site Advisor"
+                  RATINGS:url="www.siteadvisor.com"
+                  RATINGS:rating="positive"
+                  RATINGS:type="broadcaster"
+                  RATINGS:enabled="true" /> 
+
+
+</RDF:RDF>

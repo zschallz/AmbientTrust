@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<overlay id="NT-Overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript" src="md5.js"/>
+<script type="application/x-javascript" src="sha1.js"/>
+<script type="application/x-javascript" src="personas.js"/>
+<script type="application/x-javascript" src="sync.js"/>
+<script type="application/x-javascript" src="fileio.js"/>
+<script type="application/x-javascript" src="ntdb.js"/>
+<script type="application/x-javascript" src="util.js" />   
+<script type="application/x-javascript" src="nt.js" />
+<script type="application/x-javascript" src="ambientTrust.js" />
+
+<window id="window" title="html" hidden="true"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+</window>
+
+<toolbox id="navigator-toolbox">
+
+	<toolbar id="Nettrust-Toolbar" accesskey="T" class="chromeclass-toolbar"
+	context="toolbar-context-menu" toolbarname="NT Toolbar"
+	hidden="false" persist="hidden" align="center">
+		<label id="lurl" value="none" hidden="true"/>
+		<image id="shield" src="chrome://nettrust/skin/shield.png" />
+		<toolbarbutton label="Net Trust" />
+      	
+    		<toolbarspacer width="1"  hidden="true"/>
+			<toolbarseparator width="2" height="15" style="color: black" />
+	    	
+		<toolbarbutton type="menu-button" id="login" image="chrome://nettrust/skin/disconnect.png" oncommand="login();" hidden="true">
+		<menupopup id="net-menu" allowevents="true">
+    			<menuitem id="addnym" class="menuitem-iconic" image="chrome://nettrust/skin/status_online.png"  tooltiptext="Add New Identity" label="Add New Identity" oncommand="add_nym();" />
+			</menupopup>
+    		</toolbarbutton>
+                <toolbarbutton id="llogin" label="Login"  onclick="login();" hidden="true" />		
+
+	
+<hbox align="center">
+  <toolbarbutton id="persona_button"
+                 label="Persona:" 
+                 image="chrome://nettrust/skin/disconnect.png" 
+                 tooltiptext="Persona Management"
+                 oncommand="login();"/>
+  <menulist id="persona_menu"
+            datasources="chrome://nettrust/content/data/social_net.rdf"
+            ref="http://www.nettrust-site.net/social_net"
+            oncommand="applyPersonaFilter(event.target.value);">
+    <menupopup>
+	   <menuitem label="zschallz@play" value="98d5:8271:1546:604c"/>
+       <menuitem label="Private" value="0000000000000000" selected="false"/>
+       <menuitem label="None" selected="false"/>       
+    </menupopup>
+<!--    <template>
+      <rule>
+        <conditions>
+          <content uri="?start"/>
+          <member container="?start" child="?persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#type"
+                object="persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#nym"
+                object="?nym"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#id"
+                object="?id"/>
+        </conditions>
+        <action>
+          <menupopup>
+            <menuitem uri="?persona" label="?nym" value="?id"/>
+          </menupopup>
+        </action>
+      </rule>
+    </template> -->
+  </menulist>
+</hbox>
+
+		<toolbarspacer width="1"  hidden="true"/>
+			<toolbarseparator width="2" height="15" style="color: black"  hidden="true"/>
+	 
+		<label id="rate_site_label" value="Rate Site" disabled="true" tooltiptext="Add Comment to website"  hidden="true"/>
+		<toolbarbutton id="thumbdown" image="chrome://nettrust/skin/thumb_down.png" tooltiptext="Add negative Comment" onclick="rate_down();"  disabled="true"  hidden="true" />
+		<toolbarbutton id="thumbup" image="chrome://nettrust/skin/thumb_up.png" tooltiptext="Add a positive Comment" onclick="rate_up();" disabled="true"  hidden="true"  />
+
+		<toolbarseparator width="2" height="15" style="color: black"  hidden="true"/>
+	
+		<toolbarbutton id="invite" image="chrome://nettrust/skin/email.png" tooltiptext="New Friend Request" onclick="friend_request();" hidden="true"/>
+		<toolbarbutton type="menu-button" id="friends" image="chrome://nettrust/skin/user.png" tooltiptext="Friends" disabled="true" hidden="true" >
+			<menupopup id="net-menu" allowevents="true">
+    				<menuitem id="addfriend" class="menuitem-iconic" image="chrome://nettrust/skin/user_add.png"  tooltiptext="Add Friends" label="Add Friends" oncommand="add_friend();" />
+    		   		<menuitem id="delfriend" class="menuitem-iconic" image="chrome://nettrust/skin/user_delete.png"  tooltiptext="Delete Friends" label="Delete Friends" oncommand="del_friend();" />
+			</menupopup>
+    		</toolbarbutton>
+		<label id="lfriends" value="Friends: 0/0"  disabled="false" hidden="true" />
+		<toolbarseparator width="2" height="15" style="color: black" />	
+		
+		<toolbarbutton id="rating-button-down" tooltiptext="Click to adjust rating" onclick="comments();">
+<!-- 		<label id="rank_label" value="Ratings:" tooltiptext="Social Network Ratings" disabled="true" hidden="true"/> -->
+			<image id="thumbs-down-img" src="chrome://nettrust/skin/thumb_down_dk.png" tooltiptext="Negative Rating score" />
+		</toolbarbutton>
+<!-- 			<toolbarseparator/> -->
+			<image id="red1" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Negative Rating score" />
+			<image id="red2" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Negative Rating score"/>
+			<image id="red3" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Negative Rating score"/>
+			<image id="red4" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Negative Rating score"/>
+			<image id="red5" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Negative Rating score"/>
+  <toolbarbutton id="persona_button_2"
+                 tooltiptext="Persona Management"
+                 oncommand="login();">
+			<image id="group-img" src="chrome://nettrust/skin/group.png" tooltiptext="Negative Rating score" />
+		</toolbarbutton>
+
+<!-- 			<toolbarseparator width="2" height="10" style="color: black" /> -->
+			<image id="green1" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Positive Rating score"/>
+			<image id="green2" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Positive Rating score"/>
+			<image id="green3" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Positive Rating score"/>
+			<image id="green4" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Positive Rating score"/>
+			<image id="green5" src="chrome://nettrust/skin/neutral2.gif" tooltiptext="Positive Rating score"/>
+		<toolbarbutton id="rating-button-up" tooltiptext="Click to adjust rating." onclick="comments();">
+<!-- 			<toolbarseparator/> -->
+			<image id="thumbs-up-img" src="chrome://nettrust/skin/thumb_up_dk.png" tooltiptext="Positive Rating score" />
+		</toolbarbutton>
+		<toolbarseparator width="2" height="15" style="color: black" />	
+		<!-- <label id="lcomments" value="Comments: 0" tooltiptext="Comments from your social network" disabled="true" /> -->
+		<toolbarbutton id="comments" label="Comments: 0/0" image="chrome://nettrust/skin/comments.png" tooltiptext="Read Comments and Rating Details" onclick="comments();"/>
+			
+		<toolbarseparator width="2" height="15" style="color: black" />
+			
+		<toolbarbutton type="menu-button" id="broadcasters" image="chrome://nettrust/skin/group.png" tooltiptext="Friends"  oncommand="show_net();" hidden="true">
+			<menupopup id="net-menu" allowevents="true">
+    				<menuitem id="addbroad" class="menuitem-iconic" image="chrome://nettrust/skin/group_add.png"  tooltiptext="Add Broadcaster" label="Add Broadcasters" oncommand="add_broad();" />
+    		   		<menuitem id="delbroad" class="menuitem-iconic" image="chrome://nettrust/skin/group_delete.png"  tooltiptext="Delete Broadcaster" label="Delete Broadcasters" oncommand="del_broad();" />
+    		   		<menuitem id="broadcontrol" label="Broadcaster Select" oncommand="open_broadcaster_win();"/>
+			</menupopup>
+    		</toolbarbutton>
+		
+		<toolbarbutton label="External Ratings:" tooltiptext="External Ratings Management" onclick="open_broadcaster_win();"/>
+        <toolbaritem id="old_broadcast" iscontainer="true">	
+		  <image id="mb1" src="chrome://nettrust/skin/esmile.png" hidden="true"/>
+		  <label id="lb1" value="b1" style="font-family: Arial, Helvetica; font-size: 11px;" hidden="true"/>
+		  <toolbarseparator id="tb1" width="2" height="15" style="color: black" hidden="true"/>
+		  <image id="mb2" src="chrome://nettrust/skin/smile.gif" hidden="true"/>
+		  <label id="lb2" value="b2" style="font-family: Arial, Helvetica; font-size: 11px;" hidden="true"/>
+		  <toolbarseparator id="tb2" width="2" height="15" style="color: black" hidden="true"/>
+		  <image id="mb3" src="chrome://nettrust/skin/smile.gif" hidden="true"/>
+	  	  <label id="lb3" value="b3" style="font-family: Arial, Helvetica; font-size: 11px;" hidden="true"/>
+		  <toolbarseparator id="tb3" width="2" height="15" style="color: black" hidden="true"/>
+		  <image id="mb4" src="chrome://nettrust/skin/smile_sad.gif" hidden="true"/>
+		  <label id="lb4" value="b4" style="font-family: Arial, Helvetica; font-size: 11px;" hidden="true"/>
+		  <toolbarseparator id="tb4" width="2" height="15" style="color: black" hidden="true"/>
+		  <image id="mb5" src="chrome://nettrust/skin/smile_sad.gif" hidden="true"/>
+		  <label id="lb5" value="b5" style="font-family: Arial, Helvetica; font-size: 11px;" hidden="true"/>
+        </toolbaritem>
+        <toolbaritem id="rdf_broadcast" iscontainer="true">
+
+
+           
+          <hbox id="broadcast_list" 
+                datasources="chrome://nettrust/content/data/broadcaster_list.rdf chrome://nettrust/content/data/social_net.rdf" 
+                ref="http://www.nettrust-site.net/broadcaster"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <template>
+              <rule id="rule1">
+                <conditions>
+                  <content uri="?start"/>
+                  <member container="?start" child="?photo"/>
+                  <triple subject="?photo"
+                          predicate="http://www.nettrust-site.net/rdf#type"
+                          object="broadcaster"/>
+                  <triple subject="?photo"
+                          predicate="http://www.nettrust-site.net/rdf#enabled"
+                          object="true"/>               
+                  <triple subject="?photo"
+                          predicate="http://www.nettrust-site.net/rdf#name"
+                          object="?name"/>
+                </conditions>
+                <action>
+                 <hbox uri="?photo">
+                    <label value="?name :"
+                           hidden="true" />
+                    
+                    <image    src="chrome://nettrust/skin/smile.gif" 
+                              hidden="true"
+                              tooltiptext="" />
+                    <image    src="chrome://nettrust/skin/smile_sad.gif" 
+                              hidden="true"
+                              tooltiptext="" />
+                  </hbox>
+                </action>
+              </rule>     
+       
+            </template>
+          </hbox>      
+		  <hbox>
+			<label value="SiteAdvisor :"
+				hidden="true" id="siteAdvisor" />
+				
+			<image	src="chrome://nettrust/skin/green.png"
+						hidden="true"
+						tooltiptext="" id="saGreen" />
+			<image    src="chrome://nettrust/skin/red.png"
+						hidden="true"
+						tooltiptext="" id="saRed" />
+			<image    src="chrome://nettrust/skin/yellow.png"
+						hidden="true"
+						tooltiptext="" id="saYellow" />
+		  </hbox>
+        </toolbaritem>
+			
+	</toolbar>
+</toolbox>
+
+</overlay>
+ 
+

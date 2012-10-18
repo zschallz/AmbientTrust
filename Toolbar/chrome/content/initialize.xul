@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<window
+    id="findfile-window"
+    title="Persona Setup for New Users"
+    orient="horizontal"
+    onload="guardCreateButton();"
+    xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+
+<script type="application/x-javascript" src="md5.js" />
+<script type="application/x-javascript" src="sha1.js"/>
+<script type="application/x-javascript" src="fileio.js" />
+<script type="application/x-javascript" src="util.js" />
+<script type="application/x-javascript" src="personas.js" />
+<script type="application/x-javascript" src="invite.js" />
+
+
+
+<groupbox align="center" id ="first">
+<caption label = "Welcome to Net Trust!"/>
+<vbox>
+
+<!-- Please choose an identifier, or "nym", and email address. Net Trust will create "&lt;nym&gt;@play" and "&lt;nym&gt;@work" personas. The email address you provide should be the preferred contact for future Net Trust buddies. -->
+
+  <label value ='Please choose an identifier, or "nym", and email address.' />
+  <label value ="Net Trust will create &lt;nym&gt;@play and &lt;nym&gt;@work personas." />
+  <label value ="The email address should be the preferred contact for future Net Trust buddies." />
+<label value =""/>
+
+
+<vbox>  
+<hbox>
+<label value = "Nym:           " /><textbox id="init_nym" align ="center" oninput="guardCreateButton();"/>
+</hbox>
+<hbox>
+<label value = "Email:          " /><textbox id="init_email" align ="center" oninput="guardCreateButton();"/>
+</hbox>
+</vbox>
+<hbox>
+<button id="create_personas_but" label="Create Personas" oncommand="init_button();close();"/>
+</hbox>
+</vbox>
+ </groupbox>
+ <groupbox id = "second" hidden="true" flex="1">
+
+
+<label value="Thank You"/>
+</groupbox>
+</window>

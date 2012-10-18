@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="nettrust.css" type="text/css"?>
+
+
+<window id="broadcaster_window" title="Net Trust: Manage Broadcasters" 
+	   xmlns:html="http://www.w3.org/1999/xhtml"
+       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+       onload="test_broadcaster_refresh();">
+
+<script type="application/x-javascript" src="util.js" />
+
+<tree flex="1" width="300" height="200" resizable="yes" editable="true" id="broadcaster_tree"
+      datasources="chrome://nettrust/content/data/broadcaster_list.rdf chrome://nettrust/content/data/broadcaster_data.rdf" 
+      ref="http://www.nettrust-site.net/broadcaster">
+
+  <treecols>
+    <treecol id="name" label="Name" primary="true" flex="1"/>
+    <treecol id="enabled" type="checkbox" label="Enabled" editable="true" />
+    <treecol id="url" label="Url" flex="2"/>
+    <treecol id="rating" label="Rating" />
+  </treecols>
+
+  <template id="broadcast_tree_template">
+    <rule>
+      <treechildren  >
+       <treeitem uri="rdf:*">
+         <treerow>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#name"/>
+           <treecell value="rdf:http://www.nettrust-site.net/rdf#enabled" />
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#url"/>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#rating"/>
+         </treerow>
+       </treeitem>
+      </treechildren>
+    </rule>
+
+  </template>
+</tree>
+
+
+
+<hbox>
+<button
+    id="identifier"
+    class="dialog"
+    label="OK"
+    oncommand="broadcaster_commit_changes();"/>
+<button
+    id="identifier"
+    class="dialog"
+    label="Cancel"
+    oncommand="window.close();"/>
+<button
+    id="identifier"
+    class="dialog"
+    label="Reload"
+    oncommand="test_broadcaster_refresh();"/>
+</hbox>
+</window>

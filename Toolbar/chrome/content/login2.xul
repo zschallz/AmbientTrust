@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<window id="login_window" title="Net Trust Login" 
+	   xmlns:html="http://www.w3.org/1999/xhtml"
+       xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript" src="comments.js" />
+
+<label control="some-tex" value="Login"/>
+<textbox id="some-text"/>
+<label control="some-password" value="Password"/>
+<textbox id="some-password" type="password" maxlength="8"/>
+
+<tabbox>
+  <tabs>
+    <tab label="Browse Social Net"/>
+    <tab label="Other"/>
+  </tabs>
+  <tabpanels>
+    <tabpanel id="mailtab">
+ <vbox>
+<tree flex="1" width="400" height="200"
+      datasources="social_net.rdf" ref="http://www.nettrust-site.net/social_net">
+
+  <treecols>
+    <treecol id="nym" label="Name" primary="true" flex="1"/>
+    <treecol id="id" label="ID" flex="1"/>
+    <treecol id="type" label="Rating" flex="1" />
+  </treecols>
+
+  <template>
+    <rule>
+      <treechildren>
+       <treeitem uri="rdf:*">
+         <treerow>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#nym"/>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#id"/>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#type"/>
+         </treerow>
+       </treeitem>
+      </treechildren>
+    </rule>
+
+  </template>
+</tree>
+<hbox align="center">
+  <label value="Persona:"/>
+  <menulist datasources="social_net.rdf"
+            ref="http://www.nettrust-site.net/social_net">
+    <menupopup>
+       <menuitem label="None"/>
+    </menupopup>
+    <template>
+      <rule>
+        <conditions>
+          <content uri="?start"/>
+          <member container="?start" child="?persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#type"
+                object="persona"/>
+        <triple subject="?persona"
+                predicate="http://www.nettrust-site.net/rdf#nym"
+                object="?nym"/>
+        </conditions>
+        <action>
+          <menupopup>
+            <menuitem uri="?persona" label="?nym" value="?nym"/>
+          </menupopup>
+        </action>
+      </rule>
+    </template>
+  </menulist>
+</hbox>
+ </vbox>     
+      
+    </tabpanel>
+    <tabpanel id="othertab">
+
+
+<tree flex="1" width="200" height="200"
+      datasources="zoo.rdf" ref="http://www.some-fictitious-zoo.com/all-animals">
+
+  <treecols>
+    <treecol id="name" label="Name" primary="true" flex="1"/>
+    <treecol id="species" label="Species" flex="1"/>
+  </treecols>
+
+  <template>
+    <rule>
+      <treechildren>
+       <treeitem uri="rdf:*">
+         <treerow>
+           <treecell label="rdf:http://www.some-fictitious-zoo.com/rdf#name"/>
+           <treecell label="rdf:http://www.some-fictitious-zoo.com/rdf#species"/>
+         </treerow>
+       </treeitem>
+      </treechildren>
+    </rule>
+
+  </template>
+</tree>
+
+
+
+<tree flex="1" width="200" height="200"
+      datasources="zoo2.rdf" ref="http://www.nettrust-site.net/broadcaster">
+
+  <treecols>
+    <treecol id="name" label="Name" primary="true" flex="1"/>
+    <treecol id="url" label="Url" flex="1"/>
+    <treecol id="rating" label="Rating" flex="1" />
+  </treecols>
+
+  <template>
+    <rule>
+      <treechildren>
+       <treeitem uri="rdf:*">
+         <treerow>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#name"/>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#url"/>
+           <treecell label="rdf:http://www.nettrust-site.net/rdf#rating"/>
+         </treerow>
+       </treeitem>
+      </treechildren>
+    </rule>
+
+  </template>
+</tree>
+
+ 
+      
+<hbox datasources="broadcaster.rdf" ref="http://www.nettrust-site.net/broadcaster" >
+  <template>
+     <rule id="rule1">
+    <conditions>
+        <content uri="?start"/>
+        <member container="?start" child="?photo"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#type"
+                object="broadcaster"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#enabled"
+                object="true"/>               
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#name"
+                object="?name"/>
+      </conditions>
+      <action>
+        <hbox uri="?photo">
+          <label value="?name :"/>
+        </hbox>
+      </action>
+    </rule> 
+    <rule id="rule2">
+    <conditions id="condition2">
+        <content uri="?start"/>
+        <member container="?start" child="?photo"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#enabled"
+                object="true"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#name"
+                object="?name"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#name"
+                object="?name"/> 
+        <triple id="doman_match_triple"
+                subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#domain"
+                object="current_domain;"/>
+        <triple subject="?photo"
+                predicate="http://www.nettrust-site.net/rdf#domain"
+                object="?domain"/>                                
+      </conditions>
+      <action>
+        <hbox uri="?photo">
+          <image id="smile" src="chrome://nettrust/skin/smile.gif" tooltiptext="Organization: ?name ;Domain: ?domain" />
+        </hbox>
+      </action>
+    </rule>
+       
+    
+  </template>
+</hbox>
+    </tabpanel>
+  </tabpanels>
+</tabbox>
+
+
+
+
+
+</window>
